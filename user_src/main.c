@@ -3,6 +3,7 @@
 
 #include "main.h"
 #include "setup.h"
+#include "delay.h"
 
 void systick(void) {
 		
@@ -20,8 +21,14 @@ void button1(void) {
 
 int main(void) {
 	setup();
-	
+
 	while(1) {
-		printf("I am Rugrat.\n\r");
+		int32_t old_us = micros();
+		int32_t old_ms = millis();
+		delay_ms(1000);
+		int32_t new_us = micros();
+		int32_t new_ms = millis();
+		printf("%d us per %d ms per 1 second\n\r", new_us - old_us , new_ms - old_ms);
+
 	}
 }

@@ -21,7 +21,6 @@ void setup() {
  * The RELOAD value should not exceed 0xFFFFFF (16,777,215). 
  */
 void systick_setup(void) {
-
 	/* Interrupt every X number of ticks */
 	SysTick_Config(SYSTICK_RELOAD);
 }

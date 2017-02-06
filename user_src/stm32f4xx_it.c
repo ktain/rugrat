@@ -1,10 +1,23 @@
 #include "stm32f4xx_it.h"
 
 #include "main.h"
+#include "delay.h"
+
+/* Local static time variables */
+ volatile uint32_t g_millis;	// 49.7 days until overflow
+
+inline uint32_t millis(void) {
+	return g_millis;
+}
+
+inline uint32_t micros(void) {
+	return g_millis*1000 + 1000 - SysTick->VAL/100;
+}
 
 /* SysTick interrupt handler */
 void SysTick_Handler(void)
 {
+	g_millis++;
 	systick();
 }
 

@@ -18,7 +18,13 @@ void PendSV_Handler(void);
 void SysTick_Handler(void);
 void EXTI9_5_IRQHandler(void);
 void EXTI15_10_IRQHandler(void);
-	 
+
+extern volatile uint32_t g_millis;
+extern volatile uint32_t g_micros;
+
+uint32_t millis(void);
+uint32_t micros(void);
+
 #ifdef __cplusplus
 }
 #endif
