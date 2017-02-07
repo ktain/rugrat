@@ -3,8 +3,8 @@
 #include "main.h"
 #include "delay.h"
 
-/* Local static time variables */
- volatile uint32_t g_millis;	// 49.7 days until overflow
+/* Global time variables */
+volatile uint32_t g_millis;	// 49.7 days until overflow
 
 inline uint32_t millis(void) {
 	return g_millis;

@@ -1,33 +1,63 @@
+/**
+ * Filename: usart.c
+ *
+ * Provides functions for printing to the serial port.
+ * Overrides libc fputc() and fgetc() to redirect output
+ * to the serial port.
+ */
+
+/* Kernel includes */
 #include "stm32f4xx.h"
+/* libc includes */
 #include <stdio.h>
 
-#include "usart.h"
-
+/* Local FILE struct for custom fputc() and fgetc() */
 struct __FILE {
-	int32_t handle;
+	int32_t x;
+
 };
 
+/* Local stdout and stdin FILE structs */
 FILE	__stdout;
 FILE	__stdin;
 
-void _sys_exit(int32_t x) {
-		x = x;
+/*
+ * _sys_exit() - Library exit function
+ *
+ * Must not return
+ */
+void _sys_exit(int32_t x)
+{
+	x = x;
 }
-
 
 /*
- * fputc overloads printf to redirect output to serial port
+ * fputc() - sends a char to the serial port
+ *
+ * Busy wait until the serial TX port is empty
+ * and transmit the char over the USART peripheral
+ *
+ * Return the char sent
  */
-int32_t fputc(int32_t ch, FILE *f) {
+int32_t fputc(int32_t c, FILE *f) 
+{
 	while(USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
-	USART_SendData(USART1, (uint8_t)ch);
-	return ch;
+	USART_SendData(USART1, (uint8_t)c);
+	return c;
 }
 
-
-int32_t fgetc(FILE *f) {
-	uint16_t temp;
-	while(!(USART1->SR & USART_SR_RXNE));
-	temp = (uint16_t)(USART1->DR & (uint16_t)0x01FF);
-	return temp;
+/* 
+ * fgetc() - reads a char from the serial port
+ * 
+ * Busy wait until the serial RX port is empty
+ * and receive the char over the USART peripheral
+ *
+ * Return the char read
+ */
+int32_t fgetc(FILE *f) 
+{
+	uint16_t tmp;
+	while(USART_GetFlagStatus(USART1, USART_FLAG_RXNE) == RESET);
+	tmp = USART_ReceiveData(USART1);
+	return tmp;
 }
