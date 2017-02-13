@@ -1,4 +1,4 @@
-#ifndef __STM32F4xx_CONF_H
+#if !defined(__STM32F4xx_CONF_H)
 #define __STM32F4xx_CONF_H
 
 #include "stm32f4xx_adc.h"
@@ -29,7 +29,7 @@
 #include "misc.h" /* High level functions for NVIC and SysTick (add-on to CMSIS functions) */
 
 /* Exported macro ------------------------------------------------------------*/
-#ifdef  USE_FULL_ASSERT
+#if defined(USE_FULL_ASSERT)
 
 /**
   * @brief  The assert_param macro is used for function's parameters check.

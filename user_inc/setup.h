@@ -1,5 +1,9 @@
-#ifndef SETUP_H
+#if !defined(SETUP_H)
 #define SETUP_H
+
+#define TICKS_PER_MS (100000)
+#define TICKS_PER_US (100)
+#define BAUDRATE (9600)	// Serial data rate
 
 void setup(void);
 void systick_setup(void);

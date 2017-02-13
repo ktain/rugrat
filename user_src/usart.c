@@ -6,23 +6,23 @@
  * to the serial port.
  */
 
-/* Kernel includes */
+/* Peripheral includes */
 #include "stm32f4xx.h"
+
 /* libc includes */
 #include <stdio.h>
 
 /* Local FILE struct for custom fputc() and fgetc() */
 struct __FILE {
 	int32_t x;
-
 };
 
 /* Local stdout and stdin FILE structs */
-FILE	__stdout;
-FILE	__stdin;
+FILE __stdout;
+FILE __stdin;
 
 /*
- * _sys_exit() - Library exit function
+ * _sys_exit() - library exit function
  *
  * Must not return
  */
@@ -41,7 +41,9 @@ void _sys_exit(int32_t x)
  */
 int32_t fputc(int32_t c, FILE *f) 
 {
-	while(USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
+	while(USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET) {
+		;	// busy wait
+	}
 	USART_SendData(USART1, (uint8_t)c);
 	return c;
 }
@@ -53,11 +55,14 @@ int32_t fputc(int32_t c, FILE *f)
  * and receive the char over the USART peripheral
  *
  * Return the char read
+ * UNTESTED
  */
 int32_t fgetc(FILE *f) 
 {
 	uint16_t tmp;
-	while(USART_GetFlagStatus(USART1, USART_FLAG_RXNE) == RESET);
+	while(USART_GetFlagStatus(USART1, USART_FLAG_RXNE) == RESET) {
+		;	// busy wait
+	}
 	tmp = USART_ReceiveData(USART1);
 	return tmp;
 }

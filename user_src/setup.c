@@ -1,10 +1,18 @@
+/**
+ * Filename: setup.c
+ * 
+ * Peripheral setup routines
+ */
+
+/* Peripheral includes */
 #include "stm32f4xx.h"
 
+/* User includes */
 #include "setup.h"
 
-#define SYSTICK_RELOAD (SystemCoreClock/1000)	// Number of ticks between interrupts
-#define BAUDRATE 9600
-
+/*
+ * setup() - calls all other peripheral setup routines
+ */
 void setup() {
 	systick_setup();
 	led_setup();
@@ -15,20 +23,20 @@ void setup() {
 
 
 /*
- * SysTick setup
+ * systick_setup() - kernel periodic interrupt
+ * 
  * The SysTick timer is a 24-bit countdown timer.
- * SysTick_Handler is called when the timer reaches 0.
+ * SysTick_Handler is invoked when the timer reaches 0.
  * The RELOAD value should not exceed 0xFFFFFF (16,777,215). 
  */
 void systick_setup(void) {
-	/* Interrupt every X number of ticks */
-	SysTick_Config(SYSTICK_RELOAD);
+	/* Set an interrupt every X number of ticks */
+	SysTick_Config(TICKS_PER_MS);
 }
 
 
 /*
- * LED setup
- * Setup the LEDs
+ * led_setup() - Setup the LEDs
  */
 void led_setup(void) {
 	/* Declare a GPIO struct to work with*/
@@ -58,8 +66,7 @@ void led_setup(void) {
 
 
 /*
- * Emitter setup
- * Setup the emitters
+ * emitter_setup() - Setup the emitters
  */
 void emitter_setup(void) {
 	/* Declare a GPIO struct to work with*/
@@ -103,7 +110,7 @@ void emitter_setup(void) {
 }
 
 
-
+/* button_setup() - Setup user pushbuttons */
 void button_setup(void) {
 	/* Declare EXTI, GPIO, and NVIC 32-bit structs to work with */
 	EXTI_InitTypeDef EXTI_InitStructure;
@@ -137,7 +144,7 @@ void button_setup(void) {
 	/* Configure NVIC channel for button0 */
 	NVIC_InitStructure.NVIC_IRQChannel = EXTI9_5_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x0F;	// Lowest priority = 0x0F
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x0F;					// Highest priority = 0x00
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x0F;		// Highest priority = 0x00
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 	
@@ -154,12 +161,12 @@ void button_setup(void) {
 	/* Configure NVIC channel for button1 */
 	NVIC_InitStructure.NVIC_IRQChannel = EXTI15_10_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x0F;	// Lowest priority = 0x0F
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x0F;					// Highest priority = 0x00
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x0F;		// Highest priority = 0x00
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 }
  
-
+/* usart_setup() - setup serial port communication */
 void usart_setup(void) {
 	/* Declare GPIO and USART 32-bit structs to work with */
 	GPIO_InitTypeDef GPIO_InitStructure;

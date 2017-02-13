@@ -1,7 +1,7 @@
-#ifndef __STM32F4xx_IT_H
+#if !defined(__STM32F4xx_IT_H)
 #define __STM32F4xx_IT_H
 
-#ifdef __cplusplus
+#if defined(__cplusplus)
  extern "C" {
 #endif 
 
@@ -24,7 +24,7 @@ extern volatile uint32_t g_millis;
 uint32_t millis(void);
 uint32_t micros(void);
 
-#ifdef __cplusplus
+#if defined(__cplusplus)
 }
 #endif
 

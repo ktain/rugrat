@@ -21,14 +21,14 @@ void button1(void) {
 
 int main(void) {
 	setup();
-
+	delay_ms(10);	// Wait for transients to settle
+	
 	while(1) {
-		int32_t old_us = micros();
-		int32_t old_ms = millis();
-		delay_ms(1000);
-		int32_t new_us = micros();
-		int32_t new_ms = millis();
-		printf("%d us per %d ms per 1 second\n\r", new_us - old_us , new_ms - old_ms);
-
+		
+		button0();
+		delay_us(1000000);
+		button1();
+		delay_us(1000000);
+		
 	}
 }
