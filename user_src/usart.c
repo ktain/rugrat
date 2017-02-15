@@ -13,7 +13,8 @@
 #include <stdio.h>
 
 /* Local FILE struct for custom fputc() and fgetc() */
-struct __FILE {
+struct __FILE 
+{
 	int32_t x;
 };
 

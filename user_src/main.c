@@ -5,30 +5,35 @@
 #include "setup.h"
 #include "delay.h"
 
-void systick(void) {
-		
+void systick(void) 
+{
+	readSensors(); // 70us
 }
 
-void button0(void) {
-	GPIO_SetBits(GPIOA, GPIO_Pin_4|GPIO_Pin_6);
-	GPIO_ResetBits(GPIOA, GPIO_Pin_5|GPIO_Pin_7);
+void button0(void) 
+{
+	GPIO_SetBits(GPIOA, GPIO_Pin_4);
+	delay_ms(200);
+	GPIO_ResetBits(GPIOA, GPIO_Pin_4);
+	delay_ms(200);
 }
 
-void button1(void) {
+void button1(void) 
+{
 	GPIO_SetBits(GPIOA, GPIO_Pin_5|GPIO_Pin_7);
-	GPIO_ResetBits(GPIOA, GPIO_Pin_4|GPIO_Pin_6);
+	delay_ms(200);
+	GPIO_ResetBits(GPIOA, GPIO_Pin_5|GPIO_Pin_7);
+	delay_ms(200);
 }
 
-int main(void) {
+int main(void) 
+{
 	setup();
-	delay_ms(10);	// Wait for transients to settle
 	
 	while(1) {
-		
-		button0();
-		delay_us(1000000);
-		button1();
-		delay_us(1000000);
-		
+		printf("voltage %d s %d %d %d %d %d %d %d\r\n", rawVoltage,
+			rawSensorVal[0], rawSensorVal[1], rawSensorVal[2],
+			rawSensorVal[3], rawSensorVal[4], rawSensorVal[5],
+			rawSensorVal[6]);
 	}
 }

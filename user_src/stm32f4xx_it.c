@@ -12,16 +12,16 @@
 #include "delay.h"
 #include "setup.h"
 
-/* Static time variables */
-volatile uint32_t g_millis;	// 49.7 days until overflow
+#define DEBOUNCE_TIME_MS 500
 
-/* Button flags */
-
+/* Static variables */
+volatile static uint32_t g_millis;	// 49.7 days until overflow
 
 /*
  * millis() - returns system time in milliseconds
  */
-inline uint32_t millis(void) {
+inline uint32_t millis(void) 
+{
 	return g_millis;
 }
 
@@ -31,7 +31,8 @@ inline uint32_t millis(void) {
  * Return the sum of scaled current time and the remaining time
  * needed before the next systick reload cycle
  */
-inline uint32_t micros(void) {
+inline uint32_t micros(void) 
+{
 	return g_millis*1000 + (SystemCoreClock/1000 - SysTick->VAL)/TICKS_PER_US;
 }
 
@@ -43,15 +44,20 @@ inline uint32_t micros(void) {
  */
 void SysTick_Handler(void)
 {
+	__disable_irq();	// Ensure that systick is atomic
+	
 	g_millis++;
 	systick();
+	
+	__enable_irq();
 }
 
 /*
  * EXTI_9_5_IRQHandler() - Button 0 interrupt handler
  */
-void EXTI9_5_IRQHandler(void) {
-	if(EXTI_GetITStatus(EXTI_Line5) != RESET) {
+void EXTI9_5_IRQHandler(void) 
+{
+	if (EXTI_GetITStatus(EXTI_Line5) != RESET) {
 		button0();
 		EXTI_ClearITPendingBit(EXTI_Line5);
 	}
@@ -60,7 +66,8 @@ void EXTI9_5_IRQHandler(void) {
 /*
  * EXTI5_10_IRQHandler() - Button 1 interrupt handler
  */
-void EXTI15_10_IRQHandler(void) {
+void EXTI15_10_IRQHandler(void) 
+{
 	if(EXTI_GetITStatus(EXTI_Line10) != RESET) {
 		button1();
 		EXTI_ClearITPendingBit(EXTI_Line10);
